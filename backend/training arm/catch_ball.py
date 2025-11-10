@@ -57,14 +57,15 @@ while cap.isOpened():
         except:
             pass
 
-        if is_close_hand(hand_landmarks, h, w):
+        close_hand = is_close_hand(hand_landmarks, h, w)
+        if close_hand:
             open_hand = "Close"
         else:
             open_hand = "Open"
         
         ## GAME SECTION
-        if((is_close_hand(hand_landmarks, h, w) and distance(x_y_index_knuckle[0], x_y_index_knuckle[1], first_ball_pos[0], first_ball_pos[1]) <= get_ball_dist )
-           or (on_catch_ball and is_close_hand(hand_landmarks, h, w))):
+        if((close_hand and distance(x_y_index_knuckle[0], x_y_index_knuckle[1], first_ball_pos[0], first_ball_pos[1]) <= get_ball_dist )
+           or (on_catch_ball and close_hand)):
             on_catch_ball = True
         else: on_catch_ball = False
         if(on_catch_ball):
