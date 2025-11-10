@@ -35,18 +35,27 @@ def is_close_hand(finger, h, w):
 # --- SET UP GAME VARIABLES ---
 on_catch_ball = False
 score = 0
+lock_bug_score = True
 
-def move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball):
+def move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball, lock_bug_score):
     # SETUP
     first_ball_pos = [80, 430]
     final_ball_pos = [209, 290]
     get_ball_dist = 30
 
     # LOGIC
+    dist_ball2goal = distance(x_y_index_knuckle[0], x_y_index_knuckle[1],final_ball_pos[0], final_ball_pos[1])
+
+    if (not on_catch_ball and dist_ball2goal <= get_ball_dist and not lock_bug_score):
+        score += 1
+        lock_bug_score = True
+        on_catch_ball = False
+
     if ((close_hand and distance(x_y_index_knuckle[0], x_y_index_knuckle[1],
                                  first_ball_pos[0], first_ball_pos[1]) <= get_ball_dist)
         or (on_catch_ball and close_hand)):
         on_catch_ball = True
+        lock_bug_score = False
     else:
         on_catch_ball = False
 
@@ -55,16 +64,11 @@ def move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball):
     cv.circle(frame, final_ball_pos, 40, (0, 255, 0), 10)
 
     if on_catch_ball:
-        cv.circle(frame, x_y_index_knuckle, 40, (0, 0, 255), -1)
-
-    if (on_catch_ball and distance(x_y_index_knuckle[0], x_y_index_knuckle[1],
-                                   final_ball_pos[0], final_ball_pos[1]) <= get_ball_dist):
-        score += 1
-        on_catch_ball = False
-        print("Score:", score)
+        color = (0,255,0) if dist_ball2goal <= get_ball_dist  else  (0,0,255)
+        cv.circle(frame, x_y_index_knuckle, 40, color, -1)
 
     # Return updated values
-    return score, on_catch_ball
+    return score, on_catch_ball, lock_bug_score
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -93,7 +97,7 @@ while cap.isOpened():
 
         # GAME SECTION
         if x_y_index_knuckle:
-            score, on_catch_ball = move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball)
+            score, on_catch_ball, lock_bug_score = move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball, lock_bug_score)
 
         # Draw hand landmarks
         mp_drawing.draw_landmarks(
@@ -105,6 +109,7 @@ while cap.isOpened():
         pass
 
     cv.putText(frame, open_hand, (w - 170, 50), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv.LINE_AA)
+    cv.putText(frame, f"Score: {score}", (50, 50), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv.LINE_AA)
     cv.imshow('Hand Detection', frame)
 
     if cv.waitKey(1) & 0xFF == ord('q'):

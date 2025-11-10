@@ -43,32 +43,31 @@ def move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball, l
     final_ball_pos = [209, 290]
     get_ball_dist = 30
 
+    dist_to_start = distance(x_y_index_knuckle[0], x_y_index_knuckle[1], first_ball_pos[0], first_ball_pos[1])
+    dist_to_goal = distance(x_y_index_knuckle[0], x_y_index_knuckle[1], final_ball_pos[0], final_ball_pos[1])
+
     # LOGIC
-    dist_ball2goal = distance(x_y_index_knuckle[0], x_y_index_knuckle[1],final_ball_pos[0], final_ball_pos[1])
-
-    if (not on_catch_ball and dist_ball2goal <= get_ball_dist and not lock_bug_score):
-        score += 1
-        lock_bug_score = True
-        on_catch_ball = False
-
-    if ((close_hand and distance(x_y_index_knuckle[0], x_y_index_knuckle[1],
-                                 first_ball_pos[0], first_ball_pos[1]) <= get_ball_dist)
-        or (on_catch_ball and close_hand)):
+    if close_hand and dist_to_start <= get_ball_dist:
         on_catch_ball = True
         lock_bug_score = False
-    else:
+
+    elif on_catch_ball and not close_hand and dist_to_goal <= get_ball_dist and not lock_bug_score:
+        score += 1
+        on_catch_ball = False
+        lock_bug_score = True 
+
+    elif not close_hand:
         on_catch_ball = False
 
-    # DRAW BALLS
     cv.circle(frame, first_ball_pos, 40, (255, 0, 0), 10)
     cv.circle(frame, final_ball_pos, 40, (0, 255, 0), 10)
 
     if on_catch_ball:
-        color = (0,255,0) if dist_ball2goal <= get_ball_dist  else  (0,0,255)
-        cv.circle(frame, x_y_index_knuckle, 40, color, -1)
+        color = (255,25,90) if dist_to_goal <= get_ball_dist else (0, 255, 255)
+        cv.circle(frame, x_y_index_knuckle, 40, (color), -1)
 
-    # Return updated values
     return score, on_catch_ball, lock_bug_score
+
 
 while cap.isOpened():
     ret, frame = cap.read()
