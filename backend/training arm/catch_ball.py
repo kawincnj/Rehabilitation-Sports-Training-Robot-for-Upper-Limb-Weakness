@@ -59,12 +59,14 @@ def move_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball, l
     elif not close_hand:
         on_catch_ball = False
 
-    cv.circle(frame, first_ball_pos, 40, (255, 0, 0), 10)
-    cv.circle(frame, final_ball_pos, 40, (0, 255, 0), 10)
-
     if on_catch_ball:
-        color = (255,25,90) if dist_to_goal <= get_ball_dist else (0, 255, 255)
-        cv.circle(frame, x_y_index_knuckle, 40, (color), -1)
+        color = (165,29,138)
+        cv.circle(frame, x_y_index_knuckle, 40, color, -1)
+
+    color_first_ball = (255, 0, 0) if dist_to_start >= (get_ball_dist + 20) else (255, 0, 255)
+    color_final_ball = (0, 255, 0) if dist_to_goal <= get_ball_dist else (0, 0, 255)
+    cv.circle(frame, first_ball_pos, 40, color_first_ball, 10)
+    cv.circle(frame, final_ball_pos, 40, color_final_ball, 10)
 
     return score, on_catch_ball, lock_bug_score
 
