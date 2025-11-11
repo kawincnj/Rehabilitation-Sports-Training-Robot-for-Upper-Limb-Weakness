@@ -84,5 +84,30 @@ def squezz_ball(frame, close_hand, ball_normal, ball_squeez, pos, score, lock_bu
 
     return frame, score, lock_bug_score
 
-def pingpong(frame, score):
-    return frame, score
+def pingpong(frame, score, pingpong_rac, pingpong_ball, pos, close_hand, z_index, on_catch_ball):
+    THRESHOLD_RANGE_PUSH = 0.04
+    THRESHOLD_RANGE_IN = 0.003
+    is_push_ball = z_index > THRESHOLD_RANGE_PUSH
+    is_get_ball = z_index <= THRESHOLD_RANGE_IN
+    print(is_push_ball)
+
+    if (close_hand):
+        frame = overlay_img(frame, pingpong_rac, pos, 0.8, 1, -100)
+
+        if (is_get_ball):
+            on_catch_ball = True
+        elif (on_catch_ball):
+            frame = overlay_img(frame, pingpong_ball, pos, z_index*2 if z_index*2 > 0.06 else 0.06, 1, -150) # default = 0.06
+        elif (is_push_ball):
+            score += 1
+            on_catch_ball = False
+    
+    return frame, score, on_catch_ball
+
+# -0.0021031429059803486
+# -0.0027911739889532328
+# -0.0012794340727850795
+
+# -0.08473743498325348
+# -0.07776138186454773
+# -0.07650122046470642

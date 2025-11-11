@@ -37,6 +37,12 @@ ball_normal = cv.imread(ball_normal_image_path, cv.IMREAD_UNCHANGED)
 ball_squeez_image_path = 'backend/img/ball_squeez.png'
 ball_squeez = cv.imread(ball_squeez_image_path, cv.IMREAD_UNCHANGED)
 
+pingpong_ball_image_path = 'backend/img/pingpong_ball.png'
+pingpong_ball = cv.imread(pingpong_ball_image_path, cv.IMREAD_UNCHANGED)
+
+pingpong_rac_image_path = 'backend/img/pingpong_rac.png'
+pingpong_rac = cv.imread(pingpong_rac_image_path, cv.IMREAD_UNCHANGED)
+
 def get_finger_coor(finger, w,h, number):
     return [int(finger.landmark[number].x * w), int(finger.landmark[number].y * h)]
 
@@ -60,6 +66,7 @@ while cap.isOpened():
         
         # Get coordinates for the tip of the index finger (landmark 9)
         x_y_index = get_finger_coor(hand_landmarks, w,h,9)
+        z_index = hand_landmarks.landmark[9].z
         x_y_pinkey = get_finger_coor(hand_landmarks, w,h,20)
         
         close_hand = is_close_hand(hand_landmarks)
@@ -67,13 +74,13 @@ while cap.isOpened():
         
         # --- GAME SECTION ---
         if x_y_index:
-            match 4:
-                case 2:
+            match 'pingpong':
+                case "badminton":
                     # BADMINTON
                     frame, on_catch_ball, score = badminton(frame, close_hand, badminton_rac, shuttlecock, x_y_index,x_y_pinkey,
                                       w, on_catch_ball, score)
                     
-                case 4:
+                case 'football':
                     # CATCH BALL
                     score, on_catch_ball, lock_bug_score, frame = catch_ball_game(
                         frame, close_hand, x_y_index, 
@@ -81,15 +88,16 @@ while cap.isOpened():
                         football, w, get_finger_coor(hand_landmarks, w,h,12)
                     )
                 
-                case 1:
+                case 'ball':
                     frame, score, lock_bug_score_squeez = squezz_ball(frame, close_hand, ball_normal, ball_squeez, x_y_index, score,
                                                                lock_bug_score_squeez, 0.16)
                 
-                case 3:
+                case 'pingpong':
                     # PINGPONG
-                    frame, score = pingpong(frame, score)
+                    frame, score, on_catch_ball = pingpong(frame, score, pingpong_rac, pingpong_ball,
+                                            get_finger_coor(hand_landmarks, w,h,12), close_hand, abs(z_index),
+                                            on_catch_ball)
                     
-        
         mp_drawing.draw_landmarks(
             frame, hand_landmarks, mp_hands.HAND_CONNECTIONS,
             mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2),
@@ -113,3 +121,11 @@ while cap.isOpened():
 # --- Cleanup ---
 cap.release()
 cv.destroyAllWindows()
+
+# -0.0021031429059803486
+# -0.0027911739889532328
+# -0.0012794340727850795
+
+# -0.08473743498325348
+# -0.07776138186454773
+# -0.07650122046470642
