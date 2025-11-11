@@ -40,8 +40,49 @@ def catch_ball_game(frame, close_hand, x_y_index_knuckle, score, on_catch_ball, 
     return score, on_catch_ball, lock_bug_score, frame
 
 
-def badminton(frame, close_hand, badminton_rac, shuttlecock ,x_y_index_knuckle, pos):
+def badminton(frame, close_hand, badminton_rac, shuttlecock ,x_y_index, pos, w, on_catch_ball, score):
+    
+    # SETUP
+    top_line = 40
+    bottom_line = 210
 
     if (close_hand):
-        frame = overlay_img(frame, badminton_rac, pos, 0.15,1,0,-150)
-    return frame
+        badminton_face_mid_pos = (pos[0], pos[1] - 240)
+        is_above_top_line = not (badminton_face_mid_pos[1] - top_line) > 0
+        is_above_bottom_line = not (badminton_face_mid_pos[1] - bottom_line) > 0
+
+        frame = overlay_img(frame, badminton_rac, pos, 0.15,1,0,-150) #add badminton rac
+
+        if (is_above_top_line) :
+            on_catch_ball = True
+            if(on_catch_ball): frame = overlay_img(frame, shuttlecock, badminton_face_mid_pos, 0.02)
+        elif (on_catch_ball):
+            frame = overlay_img(frame, shuttlecock, badminton_face_mid_pos, 0.02)
+            if(not is_above_bottom_line):
+                score += 1
+                on_catch_ball = False
+        else:
+            pass
+
+    else: on_catch_ball = False
+
+    cv.line(frame, (0,top_line), (w, top_line), (255,0,0),2)
+    cv.line(frame, (0,bottom_line), (w, bottom_line), (255,0,0),2)
+
+    return frame, on_catch_ball, score
+
+def squezz_ball(frame, close_hand, ball_normal, ball_squeez, pos, score, lock_bug_score, ball_size = 0.14):
+
+    if (close_hand):
+        frame = overlay_img(frame, ball_squeez, pos, ball_size)
+        lock_bug_score = True
+    else:
+        frame = overlay_img(frame, ball_normal, pos, ball_size)
+        if(lock_bug_score):
+            score += 1
+            lock_bug_score = False
+
+    return frame, score, lock_bug_score
+
+def pingpong(frame, score):
+    return frame, score

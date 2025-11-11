@@ -19,6 +19,7 @@ cap = cv.VideoCapture(0)
 on_catch_ball = False
 score = 0
 lock_bug_score = True
+lock_bug_score_squeez = False
 
 # --- Load Image ---
 football_image_path = 'backend/img/football.png'
@@ -29,6 +30,12 @@ badminton_rac = cv.imread(badminton_rac_image_path, cv.IMREAD_UNCHANGED)
 
 shuttlecock_image_path = 'backend/img/shuttlecock.png'
 shuttlecock = cv.imread(shuttlecock_image_path, cv.IMREAD_UNCHANGED)
+
+ball_normal_image_path = 'backend/img/ball_normal.png'
+ball_normal = cv.imread(ball_normal_image_path, cv.IMREAD_UNCHANGED)
+
+ball_squeez_image_path = 'backend/img/ball_squeez.png'
+ball_squeez = cv.imread(ball_squeez_image_path, cv.IMREAD_UNCHANGED)
 
 def get_finger_coor(finger, w,h, number):
     return [int(finger.landmark[number].x * w), int(finger.landmark[number].y * h)]
@@ -60,18 +67,27 @@ while cap.isOpened():
         
         # --- GAME SECTION ---
         if x_y_index:
-            match 1:
-                case 1:
-                    # BADMINTON
-                    frame = badminton(frame, close_hand, badminton_rac, shuttlecock, x_y_index,x_y_pinkey)
-                    
+            match 4:
                 case 2:
+                    # BADMINTON
+                    frame, on_catch_ball, score = badminton(frame, close_hand, badminton_rac, shuttlecock, x_y_index,x_y_pinkey,
+                                      w, on_catch_ball, score)
+                    
+                case 4:
                     # CATCH BALL
                     score, on_catch_ball, lock_bug_score, frame = catch_ball_game(
                         frame, close_hand, x_y_index, 
                         score, on_catch_ball, lock_bug_score, 
                         football, w, get_finger_coor(hand_landmarks, w,h,12)
                     )
+                
+                case 1:
+                    frame, score, lock_bug_score_squeez = squezz_ball(frame, close_hand, ball_normal, ball_squeez, x_y_index, score,
+                                                               lock_bug_score_squeez, 0.16)
+                
+                case 3:
+                    # PINGPONG
+                    frame, score = pingpong(frame, score)
                     
         
         mp_drawing.draw_landmarks(
