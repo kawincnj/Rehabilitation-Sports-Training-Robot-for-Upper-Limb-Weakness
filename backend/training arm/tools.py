@@ -1,6 +1,9 @@
 import numpy as np
 import cv2 as cv
 
+def get_finger_coor(finger, w,h, number):
+    return [int(finger.landmark[number].x * w), int(finger.landmark[number].y * h)]
+
 def distance(x1, y1, x2, y2):
     """Calculates the Euclidean distance between two points."""
     return ((x1 - x2)**2 + (y1 - y2)**2) ** 0.5
