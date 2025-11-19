@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenCV FastAPI Stream - Optimized</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background: #f5f5f5;
+      }
+      h1 {
+        color: #333;
+      }
+      #video-container {
+        margin: 20px auto;
+        border: 2px solid #4caf50;
+        width: 640px;
+        height: 480px;
+        position: relative;
+        background: #000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      #processed-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      #fps-counter {
+        margin: 10px;
+        font-weight: bold;
+        color: #4caf50;
+      }
+      .controls {
+        margin: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+      }
+      button:hover {
+        background: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>FastAPI & OpenCV Live Stream (Optimized)</h1>
+    <p>Processing with frame limiting for smooth performance</p>
+
+    <div id="fps-counter">FPS: 0 | Processing: Ready</div>
+
+    <div class="controls">
+      <button onclick="adjustFPS(5)">5 FPS</button>
+      <button onclick="adjustFPS(10)">10 FPS</button>
+      <button onclick="adjustFPS(15)">15 FPS</button>
+      <button onclick="adjustFPS(30)">30 FPS</button>
+    </div>
+
+    <div id="video-container">
+      <img id="processed-image" alt="Processed Frame" />
+    </div>
+
+    <script>
+      const videoElement = document.createElement("video");
+      videoElement.autoplay = true;
+      videoElement.playsInline = true;
+
+      const processedImageElement = document.getElementById("processed-image");
+      const fpsCounter = document.getElementById("fps-counter");
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // OPTIMIZATION: Control frame rate
+      let targetFPS = 15; // Start with 15 FPS
+      let frameInterval = 1000 / targetFPS;
+      let lastFrameTime = 0;
+      let isProcessing = false; // Prevent overlapping requests
+
+      // FPS calculation
+      let frameCount = 0;
+      let lastFpsUpdate = Date.now();
+
+      function adjustFPS(fps) {
+        targetFPS = fps;
+        frameInterval = 1000 / targetFPS;
+        console.log(`Adjusted to ${fps} FPS`);
+      }
+
+      async function startCamera() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 640 },
+              height: { ideal: 480 },
+            },
+          });
+          videoElement.srcObject = stream;
+
+          videoElement.onloadedmetadata = () => {
+            videoElement.play();
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            sendFrameLoop();
+          };
+        } catch (err) {
+          console.error("Error accessing the camera: ", err);
+          alert("Could not access camera. Please check permissions.");
+        }
+      }
+
+      function sendFrameLoop() {
+        const currentTime = Date.now();
+
+        // OPTIMIZATION 1: Frame rate limiting
+        if (currentTime - lastFrameTime < frameInterval) {
+          requestAnimationFrame(sendFrameLoop);
+          return;
+        }
+
+        // OPTIMIZATION 2: Skip if still processing previous frame
+        if (isProcessing) {
+          requestAnimationFrame(sendFrameLoop);
+          return;
+        }
+
+        lastFrameTime = currentTime;
+        isProcessing = true;
+
+        // Draw the current video frame onto the canvas
+        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+        // OPTIMIZATION 3: Use lower quality JPEG (faster than PNG)
+        canvas.toBlob(
+          async (blob) => {
+            const formData = new FormData();
+            formData.append("file", blob, "frame.jpg");
+
+            try {
+              fpsCounter.textContent = `FPS: ${Math.round(
+                1000 / (currentTime - lastFrameTime)
+              )} | Processing...`;
+
+              const response = await fetch(
+                "http://127.0.0.1:8000/process_frame",
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+
+              if (response.ok) {
+                const imageBlob = await response.blob();
+                processedImageElement.src = URL.createObjectURL(imageBlob);
+
+                // Update FPS counter
+                frameCount++;
+                const now = Date.now();
+                if (now - lastFpsUpdate >= 1000) {
+                  const actualFPS = frameCount / ((now - lastFpsUpdate) / 1000);
+                  fpsCounter.textContent = `FPS: ${actualFPS.toFixed(
+                    1
+                  )} | Status: Running`;
+                  frameCount = 0;
+                  lastFpsUpdate = now;
+                }
+              } else {
+                console.error("Backend error:", response.statusText);
+                fpsCounter.textContent = `FPS: 0 | Error: ${response.statusText}`;
+              }
+            } catch (error) {
+              console.error("Network or Fetch error:", error);
+              fpsCounter.textContent = `FPS: 0 | Error: Network issue`;
+            } finally {
+              isProcessing = false;
+            }
+          },
+          "image/jpeg",
+          0.8
+        ); // JPEG with 80% quality
+
+        requestAnimationFrame(sendFrameLoop);
+      }
+
+      startCamera();
+    </script>
+  </body>
+</html>
