@@ -1,0 +1,209 @@
+/* Session Container */
+.session-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+    width: 100%;
+}
+
+/* Session Card (Left) */
+.session-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 15%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card_session {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
+    width: 1200px;       /* 👈 ลดขนาดกล่องให้เล็กลง */
+    max-width: 90%;     /* 👈 ป้องกันไม่ให้ล้นจอในมือถือ */
+    margin: 20px auto;  /* 👈 จัดให้อยู่ตรงกลาง */
+}
+
+.session-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.session-subtitle {
+    font-size: 0.95rem;
+    color: #4CAF50;
+    margin-bottom: 2rem;
+}
+
+.needle {
+    transform-origin: 100px 100px; /* จุดหมุน */
+    transform: rotate(-45deg); /* ปรับองศาที่นี่ เช่น -90 ถึง +90 */
+    transition: 0.4s ease; /* เพื่อให้หมุนสวย */
+}
+
+/* Gauge Container */
+.gauge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.gauge-svg {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+}
+
+/* Stats Container (Right) */
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Stat Card */
+.stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2.5rem 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+}
+
+.stat-bar.yellow {
+    background: linear-gradient(180deg, #FFD93D 0%, #FFC107 100%);
+}
+
+.stat-bar.green {
+    background: linear-gradient(180deg, #6BCF7F 0%, #4CAF50 100%);
+}
+
+.stat-bar.orange {
+    background: linear-gradient(180deg, #FF9066 0%, #FF6B6B 100%);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+}
+
+.stat-unit {
+    font-size: 1.2rem;
+    color: #999;
+    font-weight: 500;
+}
+
+/* Score Card */
+.score-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 6rem 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.score-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+}
+
+.score-label {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.score-value {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.score-total {
+    font-size: 1.8rem;
+    color: #999;
+    font-weight: 500;
+}
+
+.score-best {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .session-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stats-row {
+        grid-template-columns: 1fr;
+    }
+
+    .session-title {
+        font-size: 1.6rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+
+    .score-value {
+        font-size: 3rem;
+    }
+
+    .session-card {
+        padding: 2rem 1.5rem;
+    }
+}

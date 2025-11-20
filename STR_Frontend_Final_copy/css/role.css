@@ -1,0 +1,30 @@
+/* Role Selection Styles */
+.role-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid #E0E0E0;
+    background: white;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.role-btn:hover {
+    border-color: #4A8FEF;
+    color: #4A8FEF;
+}
+
+.role-btn.selected {
+    background: linear-gradient(135deg, #E8F3FF 0%, #D4E8FF 100%);
+    border-color: #4A8FEF;
+    color: #4A8FEF;
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose Your Role - BotCoach</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/role.css" />
+  </head>
+  <body>
+    <!-- Wave Background -->
+    <div class="wave-container">
+      <div class="wave wave-light"></div>
+      <div class="wave wave-dark"></div>
+    </div>
+
+    <!-- Back Button -->
+    <button class="back-button" onclick="window.location.href='index.html'">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <span>BotCoach</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <div class="card">
+        <h2>Choose your role</h2>
+        <div class="role-buttons">
+          <button
+            class="role-btn selected"
+            id="patientBtn"
+            onclick="selectRole('patient')"
+          >
+            Patient
+          </button>
+          <button
+            class="role-btn"
+            id="doctorBtn"
+            onclick="selectRole('doctor')"
+          >
+            Doctor
+          </button>
+        </div>
+        <button
+          class="btn btn-primary"
+          style="width: 100%"
+          onclick="goToLogin()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <script src="js/role.js"></script>
+  </body>
+</html>

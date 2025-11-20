@@ -1,0 +1,39 @@
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: 2px solid #E0E0E0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    background: white;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #4A8FEF;
+    box-shadow: 0 0 0 3px rgba(74, 143, 239, 0.1);
+}
+
+.form-input::placeholder {
+    color: #AAA;
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.forgot-password a {
+    color: #4A8FEF;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
