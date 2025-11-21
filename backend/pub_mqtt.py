@@ -1,23 +1,20 @@
 import paho.mqtt.client as mqtt
+import time
 
-# ---- HiveMQ Cloud Broker ----
-broker = "1da2e234bf424783bc46e915d899b1b8.s1.eu.hivemq.cloud"
-port = 8883  # TLS port
-username = "esp32_winkawin2552"
-password = "K12042009k"
-topic = "/test/winkawin"
+# ---- Local Mosquitto Broker ----
+broker = "10.50.102.43"   # Your Ubuntu IP
+port = 1883
+topic = "servo/control"
 
-# Create MQTT client
+# Create MQTT client (no username/password)
 client = mqtt.Client()
-client.username_pw_set(username, password)
-client.tls_set()  # Use TLS
 
+# Connect to local Mosquitto
 client.connect(broker, port)
 
-# Publish messages every 5 seconds
-import time
+# Publish every second
 while True:
-    message = "Hello from Python!"
+    message = "0:90"     # Example: move servo channel 0 to 90°
     client.publish(topic, message)
     print(f"Published: {message}")
     time.sleep(1)

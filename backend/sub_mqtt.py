@@ -1,34 +1,29 @@
 import paho.mqtt.client as mqtt
 
-# ---- HiveMQ Cloud Broker ----
-broker = "1da2e234bf424783bc46e915d899b1b8.s1.eu.hivemq.cloud"
-port = 8883  # TLS port
-username = "esp32_winkawin2552"
-password = "K12042009k"
-topic = "/test/winkawin"
+# ---- Local Mosquitto MQTT ----
+broker = "10.50.102.43"   # Your Ubuntu IP
+port = 1883
+topic = "servo/control"
 
-# Callback when the client connects to the broker
+# Callback when connected
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("Connected to MQTT broker")
+        print("Connected to local MQTT!")
         client.subscribe(topic)
     else:
-        print("Failed to connect, return code %d\n", rc)
+        print("Failed to connect, error code:", rc)
 
-# Callback when a message is received
+# Callback when message received
 def on_message(client, userdata, msg):
-    print(f"Received message: {msg.payload.decode()} on topic: {msg.topic}")
+    print(f"Received: {msg.payload.decode()} on {msg.topic}")
 
-# Create MQTT client
+# Create client
 client = mqtt.Client()
-client.username_pw_set(username, password)
-client.tls_set()  # Use TLS
 
 client.on_connect = on_connect
 client.on_message = on_message
 
-# Connect to broker
-client.connect(broker, port)
+# Connect (NO TLS for local broker)
+client.connect(broker, port, 60)
 
-# Blocking loop to keep the script running and listening
 client.loop_forever()
