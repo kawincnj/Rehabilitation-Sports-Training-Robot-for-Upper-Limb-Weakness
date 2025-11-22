@@ -1,3 +1,10 @@
+// WORK FLOW
+/*
+arm and hand image from website -> python (local) -> plot arm and play game normally
+                                         |
+                                         ----> another python file to get data and process whether arm or hand trying to move -> control exo to move arm and hand (mqtt local wifi)
+*/
+
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <Wire.h>

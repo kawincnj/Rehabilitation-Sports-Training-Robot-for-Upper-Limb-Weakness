@@ -210,7 +210,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
     .activities-slider {
         max-width: 900px;
     }
@@ -222,7 +222,7 @@
         margin-bottom: 2rem;
     }
 
-    .training-container {
+    .training-container {  
         flex-direction: column;
         gap: 1.5rem;
     }
@@ -261,5 +261,12 @@
     .activity-card {
         width: 100%;
         max-width: 350px;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+    .activity-card {
+        flex: 1 1 calc(50% - 1.5rem); /* 2 การ์ดต่อแถว - ลบ gap */
+        max-width: none;
     }
 }

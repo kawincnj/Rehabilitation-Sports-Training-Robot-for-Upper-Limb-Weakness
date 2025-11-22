@@ -48,6 +48,17 @@
     color: #4A8FEF;
 }
 
+.modal-overlay {
+    z-index: 9999; /* ต่ำกว่า modal แต่สูงกว่าพื้นหลัง */
+    position: fixed; /* ปิดให้เต็มหน้าจอ */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.2); /* ตัวอย่างให้เห็นว่า overlay ครอบ */
+}
+
+
 /* Setting Modal */
 .setting-modal {
     position: fixed;
@@ -61,7 +72,7 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     max-width: 500px;
     width: 90%;
-    z-index: 1000;
+    z-index: 99999;
     display: none;
     animation: modalSlideIn 0.3s ease-out;
 }
@@ -158,3 +169,65 @@
         right: 1rem;
     }
 }
+
+/* ขนาดปกติ */
+.header-buttons .btn {
+    padding: 0.8rem 1.6rem; /* หนาและยาวขึ้น */
+    font-size: 1rem;        /* ตัวอักษรใหญ่ขึ้น */
+    min-width: 120px;       /* ความกว้างขั้นต่ำเพิ่ม */
+}
+
+/* สำหรับแท็บเล็ต */
+@media (max-width: 768px) {
+    .header-buttons .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+
+    #profileMenuBtn {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px; 
+    }
+
+    #profileMenuBtn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* สำหรับมือถือ */
+@media (max-width: 480px) {
+    .header-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem; /* ระยะห่างระหว่างปุ่ม */
+    }
+    .header-buttons .btn {
+        padding: 0.4rem 1rem; /* ลด padding */
+        font-size: 1rem;      /* ลดขนาดฟอนต์ */
+        min-width: 50px;         /* ลดความกว้าง */
+        border-radius: 8px;      /* ทำให้ปุ่มโค้งน้อยลง */
+    }
+
+    #profileMenuBtn {
+        width: 32px;
+        height: 32px;
+        border-radius: 3px; 
+    }
+
+    #profileMenuBtn svg {
+        width: 16px;
+        height: 16px;
+    }
+    .logo-icon {
+        display: none;
+    }
+    .logo span {
+        display: none;
+    }
+}
+
+

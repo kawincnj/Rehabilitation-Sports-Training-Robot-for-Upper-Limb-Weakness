@@ -22,6 +22,7 @@ body {
     left: 0;
     z-index: 0;
     overflow: hidden;
+    pointer-events: none;
 }
 
 .wave {
@@ -128,7 +129,14 @@ body {
     transform: scale(15) rotate(10deg) translateY(-2px);
     transform-origin: center;
     pointer-events: none;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .dough-ball {
+        transform: scale(3) rotate(10deg) translateY(-2px);
+        margin-bottom: -10px;
+    }
 }
 
 h1 {
@@ -152,9 +160,14 @@ h1 {
 
 .card h2 {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
     color: #333;
     margin-bottom: 2rem;
+}
+
+.card p {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    color: #666;
 }
 
 /* Buttons */
@@ -324,4 +337,16 @@ h1 {
         width: 20px;
         height: 20px;
     }
+    
+    .header-btn {
+    font-size: 0.7rem;
+    }
 }
+
+/* ขนาดปกติ */
+.header-buttons .btn {
+    padding: 0.8rem 1.6rem; /* หนาและยาวขึ้น */
+    font-size: 1rem;        /* ตัวอักษรใหญ่ขึ้น */
+    min-width: 120px;       /* ความกว้างขั้นต่ำเพิ่ม */
+}
+
