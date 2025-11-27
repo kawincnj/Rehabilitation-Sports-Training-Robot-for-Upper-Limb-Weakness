@@ -11,7 +11,7 @@ def main():
         if not ret:
             break
         
-        processed_frame, score = game_processor.process_frame(frame)
+        processed_frame, score, _ = game_processor.process_frame(frame)
         print(score)
         
         cv.imshow('Hand Detection and Game', processed_frame)

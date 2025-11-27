@@ -16,17 +16,17 @@ class GameProcessor:
         self.hands = self.mp_hands.Hands(
             static_image_mode=False,
             max_num_hands=1,
-            min_detection_confidence=0.35
+            min_detection_confidence=0.05
         )
         self.mp_drawing = mp.solutions.drawing_utils
 
-        self.football = cv.imread('backend/img/football.png', cv.IMREAD_UNCHANGED)
-        self.badminton_rac = cv.imread('backend/img/badminton_rac.png', cv.IMREAD_UNCHANGED)
-        self.shuttlecock = cv.imread('backend/img/shuttlecock.png', cv.IMREAD_UNCHANGED)
-        self.ball_normal = cv.imread('backend/img/ball_normal.png', cv.IMREAD_UNCHANGED)
-        self.ball_squeez = cv.imread('backend/img/ball_squeez.png', cv.IMREAD_UNCHANGED)
-        self.pingpong_ball = cv.imread('backend/img/pingpong_ball.png', cv.IMREAD_UNCHANGED)
-        self.pingpong_rac = cv.imread('backend/img/pingpong_rac.png', cv.IMREAD_UNCHANGED)
+        self.football = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/football.png', cv.IMREAD_UNCHANGED)
+        self.badminton_rac = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/badminton_rac.png', cv.IMREAD_UNCHANGED)
+        self.shuttlecock = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/shuttlecock.png', cv.IMREAD_UNCHANGED)
+        self.ball_normal = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/ball_normal.png', cv.IMREAD_UNCHANGED)
+        self.ball_squeez = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/ball_squeez.png', cv.IMREAD_UNCHANGED)
+        self.pingpong_ball = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/pingpong_ball.png', cv.IMREAD_UNCHANGED)
+        self.pingpong_rac = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/pingpong_rac.png', cv.IMREAD_UNCHANGED)
 
     def _get_finger_coor(self, finger, w, h, number):
         return [int(finger.landmark[number].x * w), int(finger.landmark[number].y * h)]
@@ -40,6 +40,7 @@ class GameProcessor:
         
         open_hand = "NO HAND"
         x_y_index = []
+        hand_landmarks = {}
         
         if (results.multi_hand_landmarks):
             hand_landmarks = results.multi_hand_landmarks[0]
@@ -88,7 +89,7 @@ class GameProcessor:
                         
         # --- Display Info ---
         text_color = [0,0,255][::-1]
-        cv.putText(frame, open_hand, (w - 170, 50), cv.FONT_HERSHEY_SIMPLEX, 1, text_color, 2, cv.LINE_AA)
-        cv.putText(frame, f"Score: {self.score}", (50, 50), cv.FONT_HERSHEY_SIMPLEX, 1, text_color, 2, cv.LINE_AA)
+        #cv.putText(frame, open_hand, (w - 170, 50), cv.FONT_HERSHEY_SIMPLEX, 1, text_color, 2, cv.LINE_AA)
+        #cv.putText(frame, f"Score: {self.score}", (50, 50), cv.FONT_HERSHEY_SIMPLEX, 1, text_color, 2, cv.LINE_AA)
         
-        return frame, self.score
+        return frame, self.score, hand_landmarks

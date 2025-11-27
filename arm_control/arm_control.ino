@@ -6,105 +6,86 @@ arm and hand image from website -> python (local) -> plot arm and play game norm
 */
 
 #include <WiFi.h>
-#include <PubSubClient.h>
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
 // ---------- PCA9685 ----------
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 
-#define SERVOMIN 150
-#define SERVOMAX 600
+#define SERVOMIN 90
+#define SERVOMAX 560
 
-// ---------- WiFi ----------
+// ---------- WiFi (NOT USED, but kept if needed later) ----------
 const char* ssid = "winkawin2552";
 const char* password = "winkawin2552";
 
-// ---------- MQTT ----------
-const char* mqttServer = "10.50.102.43";   // <-- Your laptop IP running Mosquitto
-const int mqttPort = 1883;
-const char* mqttTopic = "servo/control";
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+// ---------- Servo Joint pins  ----------
+#define finger_joint  0
+#define hand_left_joint 2
+#define hand_right_joint  1
+#define elbow_joint  3
 
 // ---------- Servo function ----------
-void setServoAngle(int channel, int angle) {
-  int pulse = map(angle, 0, 180, SERVOMIN, SERVOMAX);
-  pwm.setPWM(channel, 0, pulse);
-}
+void setServoAngle(int channel, int angle, bool left = true, int delayMs = 50, int step = 2) {
+  static int currentAngle[16] = {0};   // stores last angle of each servo
 
-// ---------- MQTT callback ----------
-void callback(char* topic, byte* message, unsigned int length) {
-  Serial.print("MQTT message received: ");
-
-  String msg = "";
-  for (int i = 0; i < length; i++) {
-    msg += (char)message[i];
+  // Skip elbow > 90°
+  if ((channel == elbow_joint) && (angle > 90)) {
+    return;
   }
 
-  Serial.println(msg);
+  if (!left) {
+    angle = 180 - angle;
+  }               
 
-  // Expected format: channel:angle  (example: 0:90)
-  int colonIndex = msg.indexOf(':');
-  if (colonIndex > 0) {
-    int channel = msg.substring(0, colonIndex).toInt();
-    int angle = msg.substring(colonIndex + 1).toInt();
-
-    Serial.printf("Moving servo %d to %d degrees\n", channel, angle);
-
-    setServoAngle(channel, angle);
-  }
-}
-
-// ---------- WiFi connection ----------
-void connectWiFi() {
-  Serial.print("Connecting to WiFi...");
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.println("\nWiFi connected!");
-  Serial.println(WiFi.localIP());
-}
-
-// ---------- MQTT connection ----------
-void connectMQTT() {
-  while (!client.connected()) {
-    Serial.println("Connecting to MQTT...");
-    if (client.connect("nanoESP32-servo")) {
-      Serial.println("Connected to MQTT!");
-      client.subscribe(mqttTopic);
-    } else {
-      Serial.print("Failed, rc=");
-      Serial.print(client.state());
-      delay(2000);
+  if (currentAngle[channel] < angle) {
+    for (int a = currentAngle[channel]; a <= angle; a += step) {
+      int pulse = map(a, 0, 180, SERVOMIN, SERVOMAX);
+      pwm.setPWM(channel, 0, pulse);
+      delay(delayMs);
+    }
+  } else {
+    for (int a = currentAngle[channel]; a >= angle; a -= step) {
+      int pulse = map(a, 0, 180, SERVOMIN, SERVOMAX);
+      pwm.setPWM(channel, 0, pulse);
+      delay(delayMs);
     }
   }
+
+  currentAngle[channel] = angle;
 }
+
 
 // ---------- Setup ----------
 void setup() {
   Serial.begin(115200);
 
-  Wire.begin(21, 22);
+  Wire.begin();      // SDA, SCL
   pwm.begin();
   pwm.setPWMFreq(50);
 
-  connectWiFi();
-
-  client.setServer(mqttServer, mqttPort);
-  client.setCallback(callback);
+  Serial.println("PCA9685 servo test (no MQTT)");
 }
 
 // ---------- Loop ----------
 void loop() {
-  if (!client.connected()) {
-    connectMQTT();
-  }
+  // Example test for servo on channel 0
+  Serial.println("Servo 0 -> 0°");
+  // setServoAngle(hand_left_joint, 0);
+  // setServoAngle(hand_right_joint, 0, false);
+  setServoAngle(elbow_joint, 0,true,10);
+  delay(500);
 
-  client.loop();
+  Serial.println("Servo 0 -> 90°");
+  // setServoAngle(hand_left_joint, 90);
+  // setServoAngle(hand_right_joint, 90, false);
+  setServoAngle(elbow_joint, 90, true,10);
+  delay(500);
+
+  // Serial.println("Servo 0 -> 180°");
+  // setServoAngle(hand_left_joint, 180);
+  // setServoAngle(hand_right_joint, 180, false);
+  // setServoAngle(elbow_joint, 180);
+  // delay(1500);
 }

@@ -1,143 +1,168 @@
 body {
-    background: linear-gradient(180deg, #D9E8FB 0%, #BFD9FC 100%) !important;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
+  background: linear-gradient(180deg, #d9e8fb 0%, #bfd9fc 100%) !important;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 /* ต้องเปิด wave-container */
 .wave-container {
-    display: block !important;
+  display: block !important;
 }
 
 /* Glass Panel */
 .training-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
 }
 
 .training-card {
-    width: 90%;
-    height: 85%;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(25px);
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 90%;
+  height: 85%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(25px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .training-card h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-    color: #333;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  color: #333;
 }
 
+.training-content {
+  position: relative;
+  width: 960px; /*640*/
+  height: 720px; /*480*/
+  overflow: hidden;
+  border-radius: 12px; /* Matches your card style */
+  background-color: #000; /* Fallback color */
+}
+
+#webcamFeed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures video fills the div without stretching */
+  transform: scaleX(-1); /* Mirror effect */
+}
+
+/* If you added the canvas for game logic later */
+#gameCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10; /* Places canvas on top of video */
+}
 
 /* Back Button */
 .back-button {
-    position: fixed;
-    top: 2rem;
-    left: 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid #E0E0E0;
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    z-index: 1000;
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #e0e0e0;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
 }
 
 .back-button:hover {
-    background: white;
-    border-color: #4A8FEF;
-    transform: translateX(-3px);
+  background: white;
+  border-color: #4a8fef;
+  transform: translateX(-3px);
 }
 
 .back-button svg {
-    width: 24px;
-    height: 24px;
-    stroke: #333;
-    transition: all 0.3s;
+  width: 24px;
+  height: 24px;
+  stroke: #333;
+  transition: all 0.3s;
 }
 
 .back-button:hover svg {
-    stroke: #4A8FEF;
+  stroke: #4a8fef;
 }
 
 /* Next Button */
 .next-button {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    background: linear-gradient(135deg, #4A8FEF 0%, #2870DD 100%);
-    border: none;
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(74, 143, 239, 0.3);
-    z-index: 1000;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, #4a8fef 0%, #2870dd 100%);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(74, 143, 239, 0.3);
+  z-index: 1000;
 }
 
 .next-button:hover {
-    transform: translateX(3px);
-    box-shadow: 0 6px 25px rgba(74, 143, 239, 0.5);
+  transform: translateX(3px);
+  box-shadow: 0 6px 25px rgba(74, 143, 239, 0.5);
 }
 
 .next-button svg {
-    width: 24px;
-    height: 24px;
-    stroke: white;
-    transition: all 0.3s;
+  width: 24px;
+  height: 24px;
+  stroke: white;
+  transition: all 0.3s;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .back-button,
-    .next-button {
-        top: 1rem;
-        width: 42px;
-        height: 42px;
-    }
+  .back-button,
+  .next-button {
+    top: 1rem;
+    width: 42px;
+    height: 42px;
+  }
 
-    .back-button {
-        left: 1rem;
-    }
+  .back-button {
+    left: 1rem;
+  }
 
-    .next-button {
-        right: 1rem;
-    }
+  .next-button {
+    right: 1rem;
+  }
 
-    .back-button svg,
-    .next-button svg {
-        width: 20px;
-        height: 20px;
-    }
+  .back-button svg,
+  .next-button svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 @media (max-height: 600px) {
-    .back-button,
-    .next-button {
-        top: 0.5rem;
-    }
+  .back-button,
+  .next-button {
+    top: 0.5rem;
+  }
 }

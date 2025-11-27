@@ -7,28 +7,28 @@ const activities = [
     title: "Ball Gripping",
     difficulty: "beginner",
     imagePath: "png/ball.png",
-    activitiy_name: "ball",
+    activity_name: "ball",
   },
   {
     id: 2,
     title: "Badminton",
     difficulty: "easy",
     imagePath: "png/badminton.png",
-    activitiy_name: "badminton",
+    activity_name: "badminton",
   },
   {
     id: 3,
     title: "Table Tennis",
     difficulty: "medium",
     imagePath: "png/table_tennis.png",
-    activitiy_name: "pingpong",
+    activity_name: "pingpong",
   },
   {
     id: 4,
     title: "Soccer",
     difficulty: "medium",
     imagePath: "png/soccer.png",
-    activitiy_name: "football",
+    activity_name: "football",
   },
 ];
 
