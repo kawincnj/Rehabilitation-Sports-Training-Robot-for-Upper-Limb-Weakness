@@ -64,23 +64,25 @@ void setup() {
   Wire.begin();      // SDA, SCL
   pwm.begin();
   pwm.setPWMFreq(50);
+  setServoAngle(finger_joint, 20);
 
   Serial.println("PCA9685 servo test (no MQTT)");
 }
 
-// ---------- Loop ----------
+
+// // ---------- Loop ----------
 void loop() {
   // Example test for servo on channel 0
   Serial.println("Servo 0 -> 0°");
   // setServoAngle(hand_left_joint, 0);
   // setServoAngle(hand_right_joint, 0, false);
-  setServoAngle(elbow_joint, 0,true,10);
+  setServoAngle(elbow_joint, 0,true,30);
   delay(500);
 
   Serial.println("Servo 0 -> 90°");
   // setServoAngle(hand_left_joint, 90);
   // setServoAngle(hand_right_joint, 90, false);
-  setServoAngle(elbow_joint, 90, true,10);
+  setServoAngle(elbow_joint, 90, true,30);
   delay(500);
 
   // Serial.println("Servo 0 -> 180°");
