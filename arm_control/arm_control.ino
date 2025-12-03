@@ -1,93 +1,114 @@
-// WORK FLOW
-/*
-arm and hand image from website -> python (local) -> plot arm and play game normally
-                                         |
-                                         ----> another python file to get data and process whether arm or hand trying to move -> control exo to move arm and hand (mqtt local wifi)
-*/
-
 #include <WiFi.h>
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-// ---------- PCA9685 ----------
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 
 #define SERVOMIN 90
 #define SERVOMAX 560
 
-// ---------- WiFi (NOT USED, but kept if needed later) ----------
-const char* ssid = "winkawin2552";
-const char* password = "winkawin2552";
-
-
-// ---------- Servo Joint pins  ----------
+// Servo joint IDs
 #define finger_joint  0
 #define hand_left_joint 2
-#define hand_right_joint  1
-#define elbow_joint  3
+#define hand_right_joint 1
+#define elbow_joint 3
 
-// ---------- Servo function ----------
-void setServoAngle(int channel, int angle, bool left = true, int delayMs = 50, int step = 2) {
-  static int currentAngle[16] = {0};   // stores last angle of each servo
+// ---- ASYNC SERVO STRUCT ----
+struct ServoMotor {
+  int channel;
+  int currentAngle;
+  int targetAngle;
+  bool left;
+};
 
-  // Skip elbow > 90°
-  if ((channel == elbow_joint) && (angle > 90)) {
-    return;
-  }
+ServoMotor servos[4] = {
+  {finger_joint,     0, 0, true},
+  {hand_left_joint,  0, 0, true},
+  {hand_right_joint, 0, 0, false},
+  {elbow_joint,      0, 0, true}
+};
 
-  if (!left) {
-    angle = 180 - angle;
-  }               
+// ---- NON-BLOCKING SETTINGS ----
+unsigned long lastUpdate = 0;
+const int updateInterval = 30;   // ms between each step (speed)
+const int angleStep = 2;         // degrees per update
 
-  if (currentAngle[channel] < angle) {
-    for (int a = currentAngle[channel]; a <= angle; a += step) {
-      int pulse = map(a, 0, 180, SERVOMIN, SERVOMAX);
-      pwm.setPWM(channel, 0, pulse);
-      delay(delayMs);
-    }
-  } else {
-    for (int a = currentAngle[channel]; a >= angle; a -= step) {
-      int pulse = map(a, 0, 180, SERVOMIN, SERVOMAX);
-      pwm.setPWM(channel, 0, pulse);
-      delay(delayMs);
-    }
-  }
-
-  currentAngle[channel] = angle;
+// ========== MAP ANGLE TO PULSE ==========
+int angleToPulse(int angle) {
+  return map(angle, 0, 180, SERVOMIN, SERVOMAX);
 }
 
+// ========== SET TARGET ANGLE (ASYNC) ==========
+void moveServoAsync(int channel, int angle) {
+  for (int i = 0; i < 4; i++) {
+    if (servos[i].channel == channel) {
 
-// ---------- Setup ----------
+      if (!servos[i].left) angle = 180 - angle;
+      if (channel == elbow_joint && angle > 90) return;  // limit elbow
+
+      servos[i].targetAngle = angle;
+    }
+  }
+}
+
+// ========== MAIN ASYNC SERVO UPDATER ==========
+void updateServos() {
+  unsigned long now = millis();
+  if (now - lastUpdate < updateInterval) return;
+  lastUpdate = now;
+
+  for (int i = 0; i < 4; i++) {
+    ServoMotor &s = servos[i];
+
+    if (s.currentAngle == s.targetAngle) continue;
+
+    if (s.currentAngle < s.targetAngle)
+      s.currentAngle += angleStep;
+    else
+      s.currentAngle -= angleStep;
+
+    int pulse = angleToPulse(s.currentAngle);
+    pwm.setPWM(s.channel, 0, pulse);
+  }
+}
+
+// ===================== SETUP ======================
 void setup() {
   Serial.begin(115200);
+  Wire.begin();
 
-  Wire.begin();      // SDA, SCL
   pwm.begin();
   pwm.setPWMFreq(50);
-  setServoAngle(finger_joint, 20);
 
-  Serial.println("PCA9685 servo test (no MQTT)");
+  // initial positions
+  moveServoAsync(finger_joint, 20);
+  moveServoAsync(hand_right_joint, 110);
+  moveServoAsync(hand_left_joint, 100);
+
+  Serial.println("Async PCA9685 servo control is running!");
 }
 
-
-// // ---------- Loop ----------
+// ===================== LOOP ======================
 void loop() {
-  // Example test for servo on channel 0
-  Serial.println("Servo 0 -> 0°");
-  // setServoAngle(hand_left_joint, 0);
-  // setServoAngle(hand_right_joint, 0, false);
-  setServoAngle(elbow_joint, 0,true,30);
-  delay(500);
+  updateServos();
 
-  Serial.println("Servo 0 -> 90°");
-  // setServoAngle(hand_left_joint, 90);
-  // setServoAngle(hand_right_joint, 90, false);
-  setServoAngle(elbow_joint, 90, true,30);
-  delay(500);
+  // Example demo motion: elbow + hand movement
+  static unsigned long timer = 0;
+  static bool toggle = false;
 
-  // Serial.println("Servo 0 -> 180°");
-  // setServoAngle(hand_left_joint, 180);
-  // setServoAngle(hand_right_joint, 180, false);
-  // setServoAngle(elbow_joint, 180);
-  // delay(1500);
+  if (millis() - timer > 1500) {
+    timer = millis();
+    toggle = !toggle;
+
+    if (toggle) {
+      moveServoAsync(elbow_joint, 90);
+      moveServoAsync(hand_right_joint, 110);
+      moveServoAsync(hand_left_joint, 100);
+    }
+    else {
+      moveServoAsync(elbow_joint, 0);
+      moveServoAsync(hand_right_joint, 110 - 20); // 70
+      moveServoAsync(hand_left_joint, 100 - 20);  // 60
+    }
+  }
 }
