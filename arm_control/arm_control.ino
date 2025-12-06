@@ -102,13 +102,13 @@ void loop() {
 
     if (toggle) {
       moveServoAsync(elbow_joint, 90);
-      moveServoAsync(hand_right_joint, 110);
-      moveServoAsync(hand_left_joint, 100);
+      moveServoAsync(hand_right_joint, 90);
+      moveServoAsync(hand_left_joint, 80);
     }
     else {
       moveServoAsync(elbow_joint, 0);
-      moveServoAsync(hand_right_joint, 110 - 20); // 70
-      moveServoAsync(hand_left_joint, 100 - 20);  // 60
+      moveServoAsync(hand_right_joint, 90 - 10); // 70
+      moveServoAsync(hand_left_joint, 80 - 10);  // 60
     }
   }
 }
