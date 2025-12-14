@@ -31,7 +31,7 @@ The system combines **robotics, IoT, and web technology** to deliver accessible 
 ### Hardware
 - Upper-limb assistive robotic arm
 - Servo motors for controlled movement
-- ESP32 microcontroller
+- Arduino nano ESP32 microcontroller
 - Safety-focused mechanical design
 
 ### Software
@@ -73,7 +73,7 @@ The system combines **robotics, IoT, and web technology** to deliver accessible 
 
 ## 🎯 Key Technologies
 - **React (Frontend)**
-- **ESP32**
+- **Arduino nano ESP32**
 - **MQTT (IoT Communication)**
 - **Servo Motors**
 - **Web Dashboard**
