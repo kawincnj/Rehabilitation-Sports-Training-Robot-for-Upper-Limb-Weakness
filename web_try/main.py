@@ -86,4 +86,4 @@ async def process_frame(file: UploadFile = File(...)):
 # --- Run the server ---
 if __name__ == "__main__":
     # The server will run on http://127.0.0.1:8000
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=5500)

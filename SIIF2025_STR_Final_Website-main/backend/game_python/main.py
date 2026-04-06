@@ -4,7 +4,7 @@ from game_processor import GameProcessor
 def main():
     cap = cv.VideoCapture(0)
     
-    game_processor = GameProcessor(game_mode='badminton', is_show_skeleton = False) # 'football', 'badminton', 'ball', 'pingpong
+    game_processor = GameProcessor(game_mode='ball', is_show_skeleton = 1) # 'football', 'badminton', 'ball', 'pingpong
     
     while cap.isOpened():
         ret, frame = cap.read()

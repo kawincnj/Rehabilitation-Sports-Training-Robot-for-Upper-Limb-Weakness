@@ -20,13 +20,13 @@ class GameProcessor:
         )
         self.mp_drawing = mp.solutions.drawing_utils
 
-        self.football = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/football.png', cv.IMREAD_UNCHANGED)
-        self.badminton_rac = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/badminton_rac.png', cv.IMREAD_UNCHANGED)
-        self.shuttlecock = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/shuttlecock.png', cv.IMREAD_UNCHANGED)
-        self.ball_normal = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/ball_normal.png', cv.IMREAD_UNCHANGED)
-        self.ball_squeez = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/ball_squeez.png', cv.IMREAD_UNCHANGED)
-        self.pingpong_ball = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/pingpong_ball.png', cv.IMREAD_UNCHANGED)
-        self.pingpong_rac = cv.imread('SIIF2025_STR_Final_Website-main/backend/img/pingpong_rac.png', cv.IMREAD_UNCHANGED)
+        self.football = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/football.png', cv.IMREAD_UNCHANGED)
+        self.badminton_rac = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/badminton_rac.png', cv.IMREAD_UNCHANGED)
+        self.shuttlecock = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/shuttlecock.png', cv.IMREAD_UNCHANGED)
+        self.ball_normal = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/ball_normal.png', cv.IMREAD_UNCHANGED)
+        self.ball_squeez = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/ball_squeez.png', cv.IMREAD_UNCHANGED)
+        self.pingpong_ball = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/pingpong_ball.png', cv.IMREAD_UNCHANGED)
+        self.pingpong_rac = cv.imread(r'/home/winkawin2552/code/Rehabilitation-Sports-Training-Robot-for-Upper-Limb-Weakness/SIIF2025_STR_Final_Website-main/backend/img/pingpong_rac.png', cv.IMREAD_UNCHANGED)
 
     def _get_finger_coor(self, finger, w, h, number):
         return [int(finger.landmark[number].x * w), int(finger.landmark[number].y * h)]
